@@ -1,0 +1,7 @@
+[default]
+src = 'contracts'
+out = 'out'
+test = 'test'
+libraries = []
+optimizer = true
+optimizer_runs = 200

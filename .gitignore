@@ -1,0 +1,37 @@
+# En Cursor, crea archivo .gitignore
+cat > .gitignore << 'EOF'
+# Variables de entorno
+.env
+.env.local
+.env*.local
+
+# Claves privadas
+*.pem
+*.key
+*private*
+
+# Dependencias
+node_modules/
+dist/
+build/
+
+# Foundry
+out/
+cache/
+broadcast/
+
+# IDE
+.vscode/
+.idea/
+.cursor/
+*.swp
+*.swo
+
+# Sistema
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+EOF
