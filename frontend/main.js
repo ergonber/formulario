@@ -1,8 +1,147 @@
 import { ethers } from "./web3modal.js";
 
-const contractAddress = "<CONTRATO_ADDRESS>"; // Cambia luego
+const contractAddress = "0x7BA96B6463bA70b4c5187a3606f583c101E83a16"; // Cambia luego
 const contractABI = [
-  "function guardarCertificado(string,string,uint8,uint256)",
+  {
+    "type": "function",
+    "name": "certificados",
+    "inputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "nombre",
+        "type": "string",
+        "internalType": "string"
+      },
+      {
+        "name": "curso",
+        "type": "string",
+        "internalType": "string"
+      },
+      {
+        "name": "nota",
+        "type": "uint8",
+        "internalType": "uint8"
+      },
+      {
+        "name": "fecha",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "guardarCertificado",
+    "inputs": [
+      {
+        "name": "nombre",
+        "type": "string",
+        "internalType": "string"
+      },
+      {
+        "name": "curso",
+        "type": "string",
+        "internalType": "string"
+      },
+      {
+        "name": "nota",
+        "type": "uint8",
+        "internalType": "uint8"
+      },
+      {
+        "name": "fecha",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "obtenerCertificado",
+    "inputs": [
+      {
+        "name": "indice",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "outputs": [
+      {
+        "name": "",
+        "type": "string",
+        "internalType": "string"
+      },
+      {
+        "name": "",
+        "type": "string",
+        "internalType": "string"
+      },
+      {
+        "name": "",
+        "type": "uint8",
+        "internalType": "uint8"
+      },
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "function",
+    "name": "totalCertificados",
+    "inputs": [],
+    "outputs": [
+      {
+        "name": "",
+        "type": "uint256",
+        "internalType": "uint256"
+      }
+    ],
+    "stateMutability": "view"
+  },
+  {
+    "type": "event",
+    "name": "CertificadoGuardado",
+    "inputs": [
+      {
+        "name": "nombre",
+        "type": "string",
+        "indexed": false,
+        "internalType": "string"
+      },
+      {
+        "name": "curso",
+        "type": "string",
+        "indexed": false,
+        "internalType": "string"
+      },
+      {
+        "name": "nota",
+        "type": "uint8",
+        "indexed": false,
+        "internalType": "uint8"
+      },
+      {
+        "name": "fecha",
+        "type": "uint256",
+        "indexed": false,
+        "internalType": "uint256"
+      }
+    ],
+    "anonymous": false
+  }
 ];
 
 const provider = new ethers.BrowserProvider(window.ethereum);
