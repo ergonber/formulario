@@ -4,18 +4,115 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Formulario Certificados Blockchain</title>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(135deg, #43cea2 0%, #185a9d 100%);
+      font-family: 'Roboto', sans-serif;
+      color: #222;
+      min-height: 100vh;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    .card {
+      background: #fff;
+      margin-top: 60px;
+      border-radius: 18px;
+      box-shadow: 0 5px 24px rgba(24,90,157,0.12);
+      padding: 36px 28px 32px 28px;
+      max-width: 400px;
+      width: 95vw;
+    }
+    h1 {
+      color: #185a9d;
+      letter-spacing: .04em;
+      font-weight: 700;
+      margin: 0 0 18px 0;
+      font-size: 1.6rem;
+      text-align: center;
+    }
+    label {
+      font-weight: bold;
+      color: #185a9d;
+      margin-bottom: 6px;
+      display: block;
+      font-size: 1rem;
+    }
+    input, select {
+      width: 100%;
+      margin-bottom: 17px;
+      padding: 10px;
+      border: 1.2px solid #aad1ec;
+      border-radius: 8px;
+      font-size: 1rem;
+      background: #f7fcfc;
+    }
+    button {
+      width: 100%;
+      padding: 12px 0;
+      background:linear-gradient(135deg,#43cea2 0%,#185a9d 100%);
+      border: none;
+      border-radius: 8px;
+      color: white;
+      font-size: 1.1rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+      cursor: pointer;
+      box-shadow: 0px 1px 8px rgba(24,90,157,0.09);
+      transition: background 0.2s;
+    }
+    button:hover {
+      background: linear-gradient(135deg,#185a9d 0%,#43cea2 100%);
+    }
+    #resultado {
+      text-align:center;
+      font-weight: 500;
+      color: #090;
+      margin-top: 15px;
+      margin-bottom: 10px;
+    }
+    #qr-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-top: 18px;
+      gap: 6px;
+    }
+    .footer {
+      margin-top: 68px;
+      color: #fff; 
+      opacity: .7;
+      font-size: 1rem;
+      letter-spacing: .03em;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-  <h1>Formulario Certificados a Blockchain</h1>
-  <form id="cert-form">
-    <input type="text" id="nombre" placeholder="Nombre completo" required><br>
-    <input type="text" id="curso" placeholder="Curso" required><br>
-    <input type="number" id="nota" placeholder="Nota" min="0" max="100" required><br>
-    <input type="date" id="fecha" required><br>
-    <button type="submit">Enviar a Blockchain</button>
-  </form>
-  <div id="resultado"></div>
+  <div class="card">
+    <h1>Guardar Certificado en Blockchain</h1>
+    <form id="cert-form">
+      <label for="nombre">Nombre completo</label>
+      <input type="text" id="nombre" placeholder="Ej: Juan Pérez" required>
+      <label for="curso">Nombre del curso</label>
+      <input type="text" id="curso" placeholder="Ej: Solidity Web3" required>
+      <label for="nota">Nota</label>
+      <input type="text" id="nota" placeholder="Ej: 8.5 o A+" required>
+      <label for="fecha">Fecha</label>
+      <input type="date" id="fecha" required>
+      <label for="cid">CID del Certificado (Pinata/IPFS)</label>
+      <input type="text" id="cid" placeholder="Qm..." required>
+      <button type="submit">Enviar a Blockchain</button>
+    </form>
+    <div id="resultado"></div>
+    <div id="qr-section"></div>
+  </div>
+  <div class="footer">Desarrollado para Sonic Testnet &bull; 2026</div>
   <script src="https://cdn.jsdelivr.net/npm/ethers@6.10.0/dist/ethers.umd.min.js"></script>
-<script src="main.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>
