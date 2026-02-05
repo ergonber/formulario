@@ -1,16 +1,25 @@
 const contractAddress = "0x7BA96B6463bA70b4c5187a3606f583c101E83a16";
 const contractABI = [
-  // ...igual que antes, tu ABI aquí...
+  {
+    "type": "function",
+    "name": "guardarCertificado",
+    "inputs": [
+      { "name": "nombre", "type": "string", "internalType": "string" },
+      { "name": "curso", "type": "string", "internalType": "string" },
+      { "name": "nota", "type": "uint8", "internalType": "uint8" },
+      { "name": "fecha", "type": "uint256", "internalType": "uint256" }
+    ],
+    "outputs": [],
+    "stateMutability": "nonpayable"
+  }
 ];
 
 const provider = new ethers.BrowserProvider(window.ethereum);
 const form = document.getElementById("cert-form");
 const resultado = document.getElementById("resultado");
-const qrSection = document.getElementById("qr-section");
 
 form.onsubmit = async (event) => {
   event.preventDefault();
-  qrSection.innerHTML = "";
   resultado.textContent = "";
   try {
     if (!window.ethereum) {
@@ -22,26 +31,14 @@ form.onsubmit = async (event) => {
     const contrato = new ethers.Contract(contractAddress, contractABI, signer);
     const nombre = document.getElementById("nombre").value;
     const curso = document.getElementById("curso").value;
-    const nota = document.getElementById("nota").value;
+    const notaRaw = document.getElementById("nota").value;
+    let notaNum = parseInt(notaRaw);
+    if (isNaN(notaNum)) notaNum = 0;  // Se fuerza a uint8 porque así lo requiere el contrato
     const fecha = new Date(document.getElementById("fecha").value).getTime();
-    const cid = document.getElementById("cid").value;
-    // Ajusta esto si cambias el smart contract para incluir CID (ahora no lo guarda en bloque, pero lo usa en el QR)
-    const tx = await contrato.guardarCertificado(nombre, curso, isNaN(Number(nota)) ? 0 : Number(nota), fecha);
-    const receipt = await tx.wait();
-    resultado.textContent = "Certificado enviado exitosamente.";
-    // Usamos el hash de la transacción + el address + el CID en la url QR
-    const qrUrl = `https://formulario-self-two.vercel.app/?tx=${tx.hash}&addr=${contractAddress}&cid=${cid}`;
-    generarQR(qrUrl);
+    const tx = await contrato.guardarCertificado(nombre, curso, notaNum, fecha);
+    await tx.wait();
+    resultado.innerHTML = `Certificado enviado exitosamente.<br>Tx Hash: <a href='https://sonic.fusionist.io/tx/${tx.hash}' target='_blank'>${tx.hash}</a><br>Address Contrato: <b>${contractAddress}</b>`;
   } catch (e) {
     resultado.textContent = "Error: " + (e?.message || e);
   }
 };
-
-function generarQR(text) {
-  qrSection.innerHTML = `<div style='margin-bottom:7px;'>QR de verificación</div>`;
-  const qr = document.createElement("img");
-  qr.src = `https://api.qrserver.com/v1/create-qr-code/?size=170x170&data=${encodeURIComponent(text)}`;
-  qr.alt = "QR Certificado Blockchain";
-  qrSection.appendChild(qr);
-  qrSection.innerHTML += `<div style='font-size:0.92em;color:#185a9d;margin-top:8px;word-break:break-all;'>${text}</div>`;
-}
