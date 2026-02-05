@@ -1,4 +1,4 @@
-import { ethers } from "./web3modal.js";
+//import { ethers } from "./web3modal.js";
 
 const contractAddress = "0x7BA96B6463bA70b4c5187a3606f583c101E83a16"; // Cambia luego
 const contractABI = [
