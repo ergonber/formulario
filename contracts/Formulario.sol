@@ -7,14 +7,14 @@ contract Formulario {
         string curso;
         uint8 nota;
         uint256 fecha;
-        string cid;  // NUEVO: Campo para el CID
+        string cid;  // NUEVO CAMPO
     }
 
     Certificado[] public certificados;
 
     event CertificadoGuardado(string nombre, string curso, uint8 nota, uint256 fecha, string cid);
 
-    // FUNCIÓN ACTUALIZADA CON 5 PARÁMETROS (incluye CID)
+    // FUNCIÓN CON 5 PARÁMETROS
     function guardarCertificado(
         string memory nombre, 
         string memory curso, 
@@ -26,13 +26,12 @@ contract Formulario {
         emit CertificadoGuardado(nombre, curso, nota, fecha, cid);
     }
 
-    // OBTENER CERTIFICADO COMPLETO (incluye CID)
     function obtenerCertificado(uint indice) public view returns (
         string memory, 
         string memory, 
         uint8, 
         uint256,
-        string memory  // NUEVO: retorna el CID
+        string memory
     ) {
         Certificado memory cert = certificados[indice];
         return (cert.nombre, cert.curso, cert.nota, cert.fecha, cert.cid);
