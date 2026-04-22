@@ -3,144 +3,63 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registro de Certificados Blockchain</title>
-  <link href="https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap" rel="stylesheet">
+  <title>Registro de Certificados</title>
   <style>
     body {
       background: linear-gradient(135deg, #43cea2 0%, #185a9d 100%);
       font-family: 'Roboto', sans-serif;
-      color: #222;
       min-height: 100vh;
-      margin: 0;
       display: flex;
-      flex-direction: column;
+      justify-content: center;
       align-items: center;
-      justify-content: flex-start;
       padding: 20px;
     }
     .card {
-      background: #fff;
-      margin-top: 30px;
-      border-radius: 18px;
-      box-shadow: 0 5px 24px rgba(24,90,157,0.12);
-      padding: 36px 28px 32px 28px;
+      background: white;
+      border-radius: 20px;
+      padding: 30px;
       max-width: 500px;
       width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
     }
-    h1 {
-      color: #185a9d;
-      letter-spacing: .04em;
-      font-weight: 700;
-      margin: 0 0 18px 0;
-      font-size: 1.6rem;
-      text-align: center;
-    }
-    label {
-      font-weight: bold;
-      color: #185a9d;
-      margin-bottom: 6px;
-      display: block;
-      font-size: 0.9rem;
-    }
+    h1 { color: #185a9d; text-align: center; margin-bottom: 20px; }
     input {
       width: 100%;
-      margin-bottom: 17px;
       padding: 10px;
-      border: 1.2px solid #aad1ec;
+      margin-bottom: 15px;
+      border: 2px solid #aad1ec;
       border-radius: 8px;
-      font-size: 1rem;
-      background: #f7fcfc;
       box-sizing: border-box;
     }
     button {
       width: 100%;
-      padding: 12px 0;
+      padding: 12px;
       background: linear-gradient(135deg,#43cea2 0%,#185a9d 100%);
+      color: white;
       border: none;
       border-radius: 8px;
-      color: white;
-      font-size: 1.1rem;
-      font-weight: 700;
-      margin-bottom: 5px;
+      font-weight: bold;
       cursor: pointer;
-      box-shadow: 0px 1px 8px rgba(24,90,157,0.09);
-      transition: all 0.3s;
     }
-    button:hover {
-      background: linear-gradient(135deg,#185a9d 0%,#43cea2 100%);
-      transform: translateY(-2px);
-    }
-    #resultado {
-      text-align: center;
-      font-weight: 500;
-      margin-top: 15px;
-      margin-bottom: 10px;
-      word-break: break-all;
-    }
-    #qr-section {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      margin-top: 18px;
-      gap: 6px;
-    }
-    .footer {
-      margin-top: 40px;
-      color: #fff; 
-      opacity: .7;
-      font-size: 0.9rem;
-      letter-spacing: .03em;
-      text-align: center;
-    }
-    a {
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
-    .info-box {
-      background: #e3f2fd;
-      padding: 10px;
-      border-radius: 8px;
-      margin-bottom: 20px;
-      font-size: 0.8rem;
-      text-align: center;
-    }
+    button:hover { transform: translateY(-2px); }
+    #resultado { margin-top: 20px; text-align: center; font-size: 14px; word-break: break-all; }
+    #qr-section { text-align: center; margin-top: 10px; }
   </style>
 </head>
 <body>
   <div class="card">
-    <h1>📜 Guardar Certificado en Blockchain</h1>
-    <div class="info-box">
-      ⚡ Red: Sonic Testnet | Contrato: 0x7BA96B64...
-    </div>
+    <h1>📜 Guardar Certificado</h1>
     <form id="cert-form">
-      <label for="nombre">👤 Nombre completo</label>
-      <input type="text" id="nombre" placeholder="Ej: Juan Pérez" required>
-      
-      <label for="curso">📚 Nombre del curso</label>
-      <input type="text" id="curso" placeholder="Ej: Solidity Web3" required>
-      
-      <label for="nota">⭐ Nota (0-255)</label>
-      <input type="number" id="nota" placeholder="Ej: 95" min="0" max="255" required>
-      
-      <label for="fecha">📅 Fecha</label>
+      <input type="text" id="nombre" placeholder="👤 Nombre completo" required>
+      <input type="text" id="curso" placeholder="📚 Nombre del curso" required>
+      <input type="number" id="nota" placeholder="⭐ Nota (0-255)" required>
       <input type="date" id="fecha" required>
-      
-      <label for="cid">🔗 CID del Certificado (Pinata/IPFS)</label>
-      <input type="text" id="cid" placeholder="Qm... o bafy..." required>
-      
+      <input type="text" id="cid" placeholder="🔗 CID de Pinata (Qm... o bafy...)" required>
       <button type="submit">🚀 Enviar a Blockchain</button>
     </form>
     <div id="resultado"></div>
     <div id="qr-section"></div>
   </div>
-  <div class="footer">
-    🔗 Verificador: <a href="https://verificador-xi.vercel.app/" target="_blank" style="color:#fff; text-decoration:underline;">verificador-xi.vercel.app</a>
-  </div>
-  
-  <!-- Ethers CDN -->
   <script src="https://cdn.jsdelivr.net/npm/ethers@6.10.0/dist/ethers.umd.min.js"></script>
   <script src="main.js"></script>
 </body>
