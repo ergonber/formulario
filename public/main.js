@@ -1,9 +1,11 @@
-// public/main.js - FORMULARIO ACTUALIZADO
+// public/main.js - CON CID EN BLOCKCHAIN
 console.log("🚀 Formulario de certificados listo");
 
-const CONTRACT_ADDRESS = "0x7BA96B6463bA70b4c5187a3606f583c101E83a16";
+// NUEVA dirección del contrato (después de redeploy)
+const CONTRACT_ADDRESS = "0xTU_NUEVA_DIRECCION_AQUI";
 const SONIC_CHAIN_ID = 14601;
 
+// NUEVO ABI con 5 parámetros (incluye CID)
 const CONTRACT_ABI = [
   {
     "type": "function",
@@ -17,6 +19,24 @@ const CONTRACT_ABI = [
     ],
     "outputs": [],
     "stateMutability": "nonpayable"
+  },
+  {
+    "type": "function",
+    "name": "totalCertificados",
+    "inputs": [],
+    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
+    "stateMutability": "view"
+  },
+  {
+    "type": "event",
+    "name": "CertificadoGuardado",
+    "inputs": [
+      { "name": "nombre", "type": "string", "indexed": false },
+      { "name": "curso", "type": "string", "indexed": false },
+      { "name": "nota", "type": "uint8", "indexed": false },
+      { "name": "fecha", "type": "uint256", "indexed": false },
+      { "name": "cid", "type": "string", "indexed": false }
+    ]
   }
 ];
 
@@ -87,6 +107,7 @@ document.getElementById("cert-form").onsubmit = async (event) => {
     
     resultado.innerHTML = '<span style="color:#185a9d">⏳ Enviando transacción...</span>';
     
+    // AHORA CON 5 PARÁMETROS (incluye CID)
     const tx = await contract.guardarCertificado(nombre, curso, nota, fecha, cid);
     
     resultado.innerHTML = `<span style="color:#090">✅ Transacción enviada!<br>Hash: ${tx.hash.slice(0, 20)}...</span>`;
@@ -105,7 +126,7 @@ document.getElementById("cert-form").onsubmit = async (event) => {
     
     resultado.innerHTML = `
       <div style="background:#e8f5e9; padding:15px; border-radius:10px; margin-top:15px;">
-        🎉 CERTIFICADO REGISTRADO!<br><br>
+        🎉 CERTIFICADO REGISTRADO EN BLOCKCHAIN!<br><br>
         👤 ${nombre}<br>
         📚 ${curso}<br>
         ⭐ ${nota}<br>
@@ -120,7 +141,8 @@ document.getElementById("cert-form").onsubmit = async (event) => {
     document.getElementById("cert-form").reset();
     
   } catch (error) {
-    resultado.innerHTML = `<span style="color:red">❌ Error: ${error.message}</span>`;
+    console.error("Error:", error);
+    resultado.innerHTML = `<span style="color:red">❌ Error: ${error.message || error}</span>`;
   }
 };
 
