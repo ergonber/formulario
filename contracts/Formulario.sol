@@ -7,20 +7,35 @@ contract Formulario {
         string curso;
         uint8 nota;
         uint256 fecha;
+        string cid;  // NUEVO: Campo para el CID
     }
 
     Certificado[] public certificados;
 
-    event CertificadoGuardado(string nombre, string curso, uint8 nota, uint256 fecha);
+    event CertificadoGuardado(string nombre, string curso, uint8 nota, uint256 fecha, string cid);
 
-    function guardarCertificado(string memory nombre, string memory curso, uint8 nota, uint256 fecha) external {
-        certificados.push(Certificado(nombre, curso, nota, fecha));
-        emit CertificadoGuardado(nombre, curso, nota, fecha);
+    // FUNCIÓN ACTUALIZADA CON 5 PARÁMETROS (incluye CID)
+    function guardarCertificado(
+        string memory nombre, 
+        string memory curso, 
+        uint8 nota, 
+        uint256 fecha,
+        string memory cid
+    ) external {
+        certificados.push(Certificado(nombre, curso, nota, fecha, cid));
+        emit CertificadoGuardado(nombre, curso, nota, fecha, cid);
     }
 
-    function obtenerCertificado(uint indice) public view returns (string memory, string memory, uint8, uint256) {
+    // OBTENER CERTIFICADO COMPLETO (incluye CID)
+    function obtenerCertificado(uint indice) public view returns (
+        string memory, 
+        string memory, 
+        uint8, 
+        uint256,
+        string memory  // NUEVO: retorna el CID
+    ) {
         Certificado memory cert = certificados[indice];
-        return (cert.nombre, cert.curso, cert.nota, cert.fecha);
+        return (cert.nombre, cert.curso, cert.nota, cert.fecha, cert.cid);
     }
 
     function totalCertificados() public view returns (uint) {
