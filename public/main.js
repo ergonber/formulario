@@ -1,11 +1,10 @@
-// public/main.js - CON CID EN BLOCKCHAIN
+// public/main.js - CORREGIDO (ENS deshabilitado)
 console.log("🚀 Formulario de certificados listo");
 
-// NUEVA dirección del contrato (después de redeploy)
-const CONTRACT_ADDRESS = "0xTU_NUEVA_DIRECCION_AQUI";
+const CONTRACT_ADDRESS = "0x7BA96B6463bA70b4c5187a3606f583c101E83a16";
 const SONIC_CHAIN_ID = 14601;
 
-// NUEVO ABI con 5 parámetros (incluye CID)
+// ABI con 5 parámetros (incluye CID)
 const CONTRACT_ABI = [
   {
     "type": "function",
@@ -19,24 +18,6 @@ const CONTRACT_ABI = [
     ],
     "outputs": [],
     "stateMutability": "nonpayable"
-  },
-  {
-    "type": "function",
-    "name": "totalCertificados",
-    "inputs": [],
-    "outputs": [{ "name": "", "type": "uint256", "internalType": "uint256" }],
-    "stateMutability": "view"
-  },
-  {
-    "type": "event",
-    "name": "CertificadoGuardado",
-    "inputs": [
-      { "name": "nombre", "type": "string", "indexed": false },
-      { "name": "curso", "type": "string", "indexed": false },
-      { "name": "nota", "type": "uint8", "indexed": false },
-      { "name": "fecha", "type": "uint256", "indexed": false },
-      { "name": "cid", "type": "string", "indexed": false }
-    ]
   }
 ];
 
@@ -47,9 +28,15 @@ async function init() {
     setTimeout(init, 500);
     return;
   }
+  
   if (window.ethereum) {
-    provider = new ethers.BrowserProvider(window.ethereum);
-    console.log("✅ Provider listo");
+    // Configurar provider con ENS deshabilitado
+    provider = new ethers.BrowserProvider(window.ethereum, {
+      ensAddress: null,  // Deshabilitar ENS
+      name: "sonic-testnet",
+      chainId: SONIC_CHAIN_ID
+    });
+    console.log("✅ Provider listo (ENS deshabilitado)");
   }
 }
 
@@ -93,27 +80,36 @@ document.getElementById("cert-form").onsubmit = async (event) => {
   resultado.innerHTML = '<span style="color:#185a9d">🔍 Conectando wallet...</span>';
   
   try {
+    // Solicitar cuentas
     await window.ethereum.request({ method: "eth_requestAccounts" });
     
+    // Verificar red
     const chainId = await window.ethereum.request({ method: "eth_chainId" });
     if (parseInt(chainId, 16) !== SONIC_CHAIN_ID) {
+      resultado.innerHTML = '<span style="color:orange">🔄 Cambiando a Sonic Testnet...</span>';
       await switchToSonic();
       await new Promise(r => setTimeout(r, 2000));
     }
     
+    // Inicializar provider si es necesario
     if (!provider) await init();
+    
+    // Obtener signer (con ENS deshabilitado)
     signer = await provider.getSigner();
     contract = new ethers.Contract(CONTRACT_ADDRESS, CONTRACT_ABI, signer);
     
     resultado.innerHTML = '<span style="color:#185a9d">⏳ Enviando transacción...</span>';
     
-    // AHORA CON 5 PARÁMETROS (incluye CID)
+    // Enviar transacción con 5 parámetros
     const tx = await contract.guardarCertificado(nombre, curso, nota, fecha, cid);
     
     resultado.innerHTML = `<span style="color:#090">✅ Transacción enviada!<br>Hash: ${tx.hash.slice(0, 20)}...</span>`;
     
+    // Esperar confirmación
+    resultado.innerHTML = '<span style="color:#185a9d">⏳ Esperando confirmación...</span>';
     const receipt = await tx.wait();
     
+    // Crear URL de verificación
     const verificationUrl = `https://verificador-xi.vercel.app/?hash=${tx.hash}`;
     
     // Generar QR
@@ -124,6 +120,7 @@ document.getElementById("cert-form").onsubmit = async (event) => {
       <a href="${verificationUrl}" target="_blank" style="color:#185a9d; margin-top:10px; display:block;">🔗 Ver certificado online</a>
     `;
     
+    // Mostrar resultado
     resultado.innerHTML = `
       <div style="background:#e8f5e9; padding:15px; border-radius:10px; margin-top:15px;">
         🎉 CERTIFICADO REGISTRADO EN BLOCKCHAIN!<br><br>
@@ -138,11 +135,18 @@ document.getElementById("cert-form").onsubmit = async (event) => {
       </div>
     `;
     
+    // Limpiar formulario
     document.getElementById("cert-form").reset();
     
   } catch (error) {
-    console.error("Error:", error);
-    resultado.innerHTML = `<span style="color:red">❌ Error: ${error.message || error}</span>`;
+    console.error("Error completo:", error);
+    let errorMsg = error.message || error;
+    if (errorMsg.includes("user rejected")) {
+      errorMsg = "Transacción rechazada por el usuario";
+    } else if (errorMsg.includes("insufficient funds")) {
+      errorMsg = "Fondos insuficientes para pagar el gas";
+    }
+    resultado.innerHTML = `<span style="color:red">❌ Error: ${errorMsg}</span>`;
   }
 };
 
