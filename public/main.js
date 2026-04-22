@@ -2,7 +2,7 @@
 console.log("🚀 Formulario de certificados listo");
 
 // ⚠️ REEMPLAZA CON LA NUEVA DIRECCIÓN DE TU CONTRATO DESPLEGADO
-const CONTRACT_ADDRESS = "0xTU_NUEVA_DIRECCION_AQUI";
+const CONTRACT_ADDRESS = "0x2aac72f1eFFd847C9b2E900de8fFb57be4a18e24";
 const SONIC_CHAIN_ID = 14601;
 
 // ABI con 5 parámetros (incluye CID)
