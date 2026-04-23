@@ -13,7 +13,7 @@ const CONTRACT_ABI = [
     "inputs": [
       { "name": "nombre", "type": "string" },
       { "name": "curso", "type": "string" },
-      { "name": "nota", "type": "uint8" },
+      { "name": "nota", "type": "string" },      // ← string
       { "name": "fecha", "type": "uint256" },
       { "name": "cid", "type": "string" }
     ],
@@ -48,7 +48,7 @@ document.getElementById("cert-form").onsubmit = async (event) => {
   
   const nombre = document.getElementById("nombre").value;
   const curso = document.getElementById("curso").value;
-  const nota = parseInt(document.getElementById("nota").value) || 0;
+  const nota = document.getElementById("nota").value;  // Texto o número
   const fecha = new Date(document.getElementById("fecha").value).getTime();
   const cid = document.getElementById("cid").value;
   
