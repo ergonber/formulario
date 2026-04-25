@@ -1,11 +1,10 @@
-// public/main.js - CON 5 PARÁMETROS Y NUEVA DIRECCIÓN
+// public/main.js - VERSIÓN CORREGIDA (fecha en formato correcto)
 console.log("🚀 Formulario de certificados listo");
 
-// ⚠️ REEMPLAZA CON LA NUEVA DIRECCIÓN DE TU CONTRATO DESPLEGADO
 const CONTRACT_ADDRESS = "0x0196fb4ac891F47CC194AB5D6b0419C8e709085f";
 const SONIC_CHAIN_ID = 14601;
 
-// ABI con 5 parámetros (incluye CID)
+// ABI con 5 parámetros (string, string, string, uint256, string)
 const CONTRACT_ABI = [
   {
     "type": "function",
@@ -13,7 +12,7 @@ const CONTRACT_ABI = [
     "inputs": [
       { "name": "nombre", "type": "string" },
       { "name": "curso", "type": "string" },
-      { "name": "nota", "type": "string" },      // ← string
+      { "name": "nota", "type": "string" },
       { "name": "fecha", "type": "uint256" },
       { "name": "cid", "type": "string" }
     ],
@@ -43,19 +42,53 @@ async function switchToSonic() {
   }
 }
 
+// Función para convertir fecha a timestamp CORRECTO (13 dígitos)
+function convertirFechaATimestamp(fechaStr) {
+  // El input type="date" devuelve YYYY-MM-DD
+  // Ejemplo: "2026-04-01"
+  
+  if (!fechaStr) return 0;
+  
+  // Dividir la fecha
+  const partes = fechaStr.split('-');
+  if (partes.length !== 3) return 0;
+  
+  const anio = parseInt(partes[0]);
+  const mes = parseInt(partes[1]) - 1; // Los meses en JS van de 0 a 11
+  const dia = parseInt(partes[2]);
+  
+  // Crear fecha en UTC para evitar problemas de zona horaria
+  const fechaUTC = new Date(Date.UTC(anio, mes, dia, 0, 0, 0));
+  const timestamp = fechaUTC.getTime();
+  
+  console.log("📅 Fecha original:", fechaStr);
+  console.log("📅 Timestamp generado:", timestamp);
+  console.log("📅 Fecha convertida:", new Date(timestamp).toISOString().split('T')[0]);
+  
+  return timestamp;
+}
+
 document.getElementById("cert-form").onsubmit = async (event) => {
   event.preventDefault();
   
   const nombre = document.getElementById("nombre").value;
   const curso = document.getElementById("curso").value;
-  const nota = document.getElementById("nota").value;  // Texto o número
-  const fecha = new Date(document.getElementById("fecha").value).getTime();
+  const nota = document.getElementById("nota").value;
+  const fechaRaw = document.getElementById("fecha").value;
   const cid = document.getElementById("cid").value;
   
   const resultado = document.getElementById("resultado");
   
-  if (!nombre || !curso || !fecha || !cid) {
+  if (!nombre || !curso || !nota || !fechaRaw || !cid) {
     resultado.innerHTML = '<span style="color:red">❌ Completa todos los campos</span>';
+    return;
+  }
+  
+  // CONVERTIR FECHA CORRECTAMENTE
+  const fecha = convertirFechaATimestamp(fechaRaw);
+  
+  if (fecha === 0) {
+    resultado.innerHTML = '<span style="color:red">❌ Fecha inválida</span>';
     return;
   }
   
@@ -77,7 +110,7 @@ document.getElementById("cert-form").onsubmit = async (event) => {
     
     resultado.innerHTML = '<span style="color:#185a9d">⏳ Enviando transacción...</span>';
     
-    // 5 PARÁMETROS (CON CID)
+    // Enviar transacción con fecha CORRECTA
     const tx = await contract.guardarCertificado(nombre, curso, nota, fecha, cid);
     
     resultado.innerHTML = `<span style="color:#090">✅ Transacción enviada!<br>Hash: ${tx.hash.slice(0, 20)}...</span>`;
@@ -93,13 +126,16 @@ document.getElementById("cert-form").onsubmit = async (event) => {
       <a href="${verificationUrl}" target="_blank" style="color:#185a9d;">🔗 Ver certificado</a>
     `;
     
+    // Convertir timestamp a fecha legible para mostrar
+    const fechaLegible = new Date(fecha).toLocaleDateString('es-ES');
+    
     resultado.innerHTML = `
       <div style="background:#e8f5e9; padding:15px; border-radius:10px; margin-top:15px;">
         🎉 CERTIFICADO REGISTRADO EN BLOCKCHAIN!<br><br>
         👤 ${nombre}<br>
         📚 ${curso}<br>
         ⭐ ${nota}<br>
-        📅 ${new Date(fecha).toLocaleDateString()}<br>
+        📅 ${fechaLegible}<br>
         🔗 CID: ${cid}<br>
         📫 Hash: ${tx.hash}<br>
         🔢 Block: ${receipt.blockNumber}<br>
