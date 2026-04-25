@@ -108,7 +108,8 @@ document.getElementById("cert-form").onsubmit = async (event) => {
     resultado.innerHTML = '<span style="color:#185a9d">⏳ Enviando transacción...</span>';
     
     // Enviar transacción con fecha CORRECTA
-    const tx = await contract.guardarCertificado(nombre, curso, nota, fecha, cid);
+    const timestampEnSegundos = Math.floor(fecha / 1000);
+    const tx = await contract.guardarCertificado(nombre, curso, nota, timestampEnSegundos, cid);
     
     resultado.innerHTML = `<span style="color:#090">✅ Transacción enviada!<br>Hash: ${tx.hash.slice(0, 20)}...</span>`;
     
