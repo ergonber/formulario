@@ -44,24 +44,21 @@ async function switchToSonic() {
 
 // Función para convertir fecha a timestamp CORRECTO (13 dígitos)
 function convertirFechaATimestamp(fechaStr) {
-  // El input type="date" devuelve YYYY-MM-DD
-  // Ejemplo: "2026-04-01"
-  
   if (!fechaStr) return 0;
   
-  // Dividir la fecha
+  // El input type="date" devuelve YYYY-MM-DD
+  // Ejemplo: "2026-04-02"
   const partes = fechaStr.split('-');
   if (partes.length !== 3) return 0;
   
   const anio = parseInt(partes[0]);
-  const mes = parseInt(partes[1]) - 1; // Los meses en JS van de 0 a 11
+  const mes = parseInt(partes[1]);
   const dia = parseInt(partes[2]);
   
-  // Crear fecha en UTC para evitar problemas de zona horaria
-  const fechaUTC = new Date(Date.UTC(anio, mes, dia, 0, 0, 0));
-  const timestamp = fechaUTC.getTime();
+  // Usar UTC a las 12:00 PM para evitar problemas de zona horaria
+  const timestamp = Date.UTC(anio, mes - 1, dia, 12, 0, 0);
   
-  console.log("📅 Fecha original:", fechaStr);
+  console.log("📅 Fecha original (YYYY-MM-DD):", fechaStr);
   console.log("📅 Timestamp generado:", timestamp);
   console.log("📅 Fecha convertida:", new Date(timestamp).toISOString().split('T')[0]);
   
